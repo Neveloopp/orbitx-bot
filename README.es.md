@@ -1,75 +1,87 @@
 # orbitx-bot
 
-Español · [English](https://unpkg.com/orbitx-bot@2.0.1/README.md)
+[![npm version](https://img.shields.io/npm/v/orbitx-bot.svg)](https://www.npmjs.com/package/orbitx-bot)
+[![npm downloads](https://img.shields.io/npm/dm/orbitx-bot.svg)](https://www.npmjs.com/package/orbitx-bot)
+[![license](https://img.shields.io/npm/l/orbitx-bot.svg)](https://www.npmjs.com/package/orbitx-bot)
 
-Librería TypeScript para programar bots del chat **ORBITX SOCIAL** (ORBITX SPACE). Sin dependencias en producción, Node.js 18+.
+[Español](README.es.md) · English
+
+TypeScript library to program bots for the **ORBITX SOCIAL** chat (ORBITX SPACE). Zero runtime dependencies, Node.js 18+.
+
+Available on npm: **[orbitx-bot](https://www.npmjs.com/package/orbitx-bot)**
 
 ```ts
 import { createBotFromEnv, button, Keyboard } from 'orbitx-bot';
 
-const bot = createBotFromEnv({ owners: ['@yo'] });
+const bot = createBotFromEnv({ owners: ['@me'] });
 
 bot.onCommand('menu', (ctx) =>
-  ctx.reply('Hola', { buttons: new Keyboard().row(button('Música', 'music')) }),
-  { description: 'Abre el menú' },
+  ctx.reply('Hello', { buttons: new Keyboard().row(button('Music', 'music')) }),
+  { description: 'Open the menu' },
 );
 
-bot.onButton('music', (ctx) => ctx.reply('Escribe /play y el nombre de una canción'));
+bot.onButton('music', (ctx) => ctx.reply('Write /play and the name of a song'));
 
 await bot.start({ handleSignals: true });
 ```
 
-## Instalación
+Install
 
 ```bash
 npm install orbitx-bot
 ```
 
-Saca la clave del bot (`oxb_…`) de «Bot ORBITX» en ORBITX SPACE y mantenla fuera del código:
+Or view the package page on npm: https://www.npmjs.com/package/orbitx-bot
+
+Get the bot key (oxb_…) from «Bot ORBITX» in ORBITX SPACE and keep it out of your code:
 
 ```bash
 ORBITX_BOT_KEY=oxb_xxxxxxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-## Qué incluye
+What you get
 
-- **Creación**: `createBot(clave | opciones)` y `createBotFromEnv()`, con opciones validadas y una clave que nunca aparece en errores ni logs.
-- **Manejadores en módulos**: grupos de manejadores con `Router`, montados en el bot o entre sí, cargados desde una carpeta con `bot.loadModules('./dist/handlers')`.
-- **Middleware con alcance**: `bot.use()` para toda actualización, `router.use()` solo cuando ese router responde.
-- **Middleware listo**: `guard` / `restrict` (dueño, admin, grupo, privado), `throttle`, `session` (memoria o archivo JSON), `trace`.
-- **Conversaciones**: `await ctx.ask('¿Tu nombre?')` espera el siguiente mensaje de esa persona.
-- **API agrupada**: `bot.api.messages`, `media`, `chats`, `members`, `account`, con tipos completos.
-- **Errores claros**: `ApiError`, `AuthError`, `NetworkError`, `RequestTimeoutError`, `FileError`… cada uno se explica en inglés y español con `error.explain('es')`.
-- **Transporte robusto**: timeouts, cancelación, reintentos solo donde son seguros y espera creciente en el long poll.
-- **Procesamiento concurrente**: las actualizaciones de un chat siguen en orden, los chats distintos corren en paralelo.
-- **Utilidades**: `Keyboard`, `menu`, `paginate`, `splitText`, `ctx.replyLong`, `bot.broadcast`, `bot.every`, `helpHandler`, apagado ordenado.
-- **Pruebas**: `orbitx-bot/testing` con actualizaciones falsas y un `fetch` falso.
+· Creation: createBot(key | options) and createBotFromEnv(), with validated options and a key that never shows up in errors or logs.
+· Handlers in modules: Router groups of handlers, mounted on the bot or on each other, loaded from a folder with bot.loadModules('./dist/handlers').
+· Scoped middleware: bot.use() for every update, router.use() only when that router answers.
+· Ready-made middleware: guard / restrict (owner, admin, group, private), throttle, session (memory or JSON file), trace.
+· Conversations: await ctx.ask('Your name?') waits for the next message of that person.
+· Grouped API: bot.api.messages, media, chats, members, account, fully typed.
+· Clear errors: ApiError, AuthError, NetworkError, RequestTimeoutError, FileError… each one explains itself in English and Spanish with error.explain('es').
+· Robust transport: timeouts, cancellation, retries only where they are safe, backoff on the long poll.
+· Concurrent processing: updates of one chat stay in order, different chats run side by side.
+· Utilities: Keyboard, menu, paginate, splitText, ctx.replyLong, bot.broadcast, bot.every, helpHandler, graceful shutdown.
+· Testing: orbitx-bot/testing with fake updates and a fake fetch.
 
-## Estructura del proyecto
+Project layout
 
 ```text
 src/
-  index.ts         exportaciones públicas
+  index.ts         public exports
   create.ts        createBot, createBotFromEnv
-  config.ts        validación de opciones y valores por defecto
-  protocol.ts      el único lugar que conoce los nombres del protocolo (URL, métodos, tipos de update)
-  errors.ts        clases de error y pistas bilingües
-  logger.ts        logger de consola con identidad ORBITX
-  http/            transporte (fetch, reintentos, timeouts) y entradas de archivo
+  config.ts        option validation and defaults
+  protocol.ts      the only place that knows the wire names (URL, methods, update kinds)
+  errors.ts        error classes and bilingual hints
+  logger.ts        branded console logger
+  http/            transport (fetch, retries, timeouts) and file inputs
   api/             messages, media, chats, members, account
   core/            bot, router, context, scheduler, poller, waiters, loader
   middleware/      guard, throttle, session, trace
-  handlers/        manejadores listos (help)
-  ui/              botones, menús, teclados, paginación
+  handlers/        ready-made handlers (help)
+  ui/              buttons, menus, keyboards, pagination
 ```
 
-## Documentación
+Documentation
 
-| Tema | English | Español |
-| --- | --- | --- |
-| Guía | [docs/en/guide.md](https://unpkg.com/orbitx-bot@2.0.1/docs/en/guide.md) | [docs/es/guia.md](https://unpkg.com/orbitx-bot@2.0.1/docs/es/guia.md) |
-| Referencia de la API | [docs/en/api.md](https://unpkg.com/orbitx-bot@2.0.1/docs/en/api.md) | [docs/es/api.md](https://unpkg.com/orbitx-bot@2.0.1/docs/es/api.md) |
-| Errores | [docs/en/errors.md](https://unpkg.com/orbitx-bot@2.0.1/docs/en/errors.md) | [docs/es/errores.md](https://unpkg.com/orbitx-bot@2.0.1/docs/es/errores.md) |
-| Migrar desde 1.2.0 | [docs/en/migration.md](https://unpkg.com/orbitx-bot@2.0.1/docs/en/migration.md) | [docs/es/migracion.md](https://unpkg.com/orbitx-bot@2.0.1/docs/es/migracion.md) |
+Topic English Español
+Guide docs/en/guide.md docs/es/guia.md
+API reference docs/en/api.md docs/es/api.md
+Errors docs/en/errors.md docs/es/errores.md
+Migrating from 1.2.0 docs/en/migration.md docs/es/migracion.md
 
-Documentación de la plataforma: https://ctrl.orbitxspace.com/bots?tab=docs
+Platform documentation: https://ctrl.orbitxspace.com/bots?tab=docs
+
+Links
+
+· npm package: https://www.npmjs.com/package/orbitx-bot
+· Repository: https://github.com/Neveloopp/orbitx-bot
